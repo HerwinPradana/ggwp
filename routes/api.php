@@ -29,6 +29,9 @@ $api->version('v1', function (Router $api) {
                 ]);
             }
         ]);
+
+        //
+        $api->get('tags', 'App\Api\V1\Controllers\TagController@index');
     });
 
     $api->get('hello', function() {
