@@ -12,7 +12,7 @@ return [
     | any other location as required by the application or its packages.
     */
 
-    'name' => 'GGWP - Get Good Web Portal',
+    'name' => 'Laravel',
 
     /*
     |--------------------------------------------------------------------------
@@ -167,7 +167,9 @@ return [
          * Package Service Providers...
          */
 
-        //
+        Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
+        Dingo\Api\Provider\LaravelServiceProvider::class,
+        Barryvdh\Cors\ServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -177,10 +179,6 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-
-        //
-        Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
-        Dingo\Api\Provider\LaravelServiceProvider::class,
 
     ],
 
@@ -230,9 +228,10 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
 
-        //
+        /*
+         * Package Facades...
+         */
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
-
     ],
 
 ];
