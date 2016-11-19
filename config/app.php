@@ -180,6 +180,7 @@ return [
 
         //
         Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
+        Dingo\Api\Provider\LaravelServiceProvider::class,
 
     ],
 
