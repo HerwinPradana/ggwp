@@ -3,12 +3,12 @@
 namespace App\Api\V1\Controllers;
 
 use JWTAuth;
-use App\Tag;
+use App\Post;
 use Dingo\Api\Routing\Helpers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class TagController extends Controller
+class PostController extends Controller
 {
     use Helpers;
 
@@ -18,14 +18,14 @@ class TagController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-	{
-	    $currentUser = JWTAuth::parseToken()->authenticate();
-	    $tag 		 = new Tag();
-	    return $tag
-	    	->orderBy('created_at', 'desc')
-	    	->get()
-	    	->toArray();
-	}
+    {
+        $currentUser = JWTAuth::parseToken()->authenticate();
+        $post        = new Post();
+        return $post
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->toArray();
+    }
 
     /**
      * Show the form for creating a new resource.
