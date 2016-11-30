@@ -12,6 +12,10 @@ class PostController extends Controller
 {
     use Helpers;
 
+    private function currentUser() {
+        return JWTAuth::parseToken()->authenticate();
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -19,10 +23,8 @@ class PostController extends Controller
      */
     public function index()
     {
-        $currentUser = JWTAuth::parseToken()->authenticate();
-        $post        = new Post();
-        return $post
-            ->orderBy('created_at', 'desc')
+        $this->currentUser();
+        return Post::orderBy('created_at', 'desc')
             ->get()
             ->toArray();
     }
@@ -44,8 +46,20 @@ class PostController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        //
+    {   
+        $this->currentUser();
+        
+        $post = new Post;
+        $post->content = $request->get('content');
+        $post->user_id = $this->currentUser()->id;
+        $post->is_tutorial = $request->get('is_tutorial');
+        $post->created_by = $this->currentUser()->id;
+        $post->updated_by = $this->currentUser()->id;
+
+        if($this->currentUser()->posts()->save($post))
+            return $this->response->created();
+        else
+            return $this->response->error('could_not_create_book', 500);
     }
 
     /**

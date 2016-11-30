@@ -4,13 +4,19 @@ namespace App\Api\V1\Controllers;
 
 use JWTAuth;
 use App\Tag;
+use App\Http\Requests;
+use Illuminate\Http\Request;
 use Dingo\Api\Routing\Helpers;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class TagController extends Controller
 {
     use Helpers;
+
+    private function currentUser() {
+        return JWTAuth::parseToken()->authenticate();
+    }
 
     /**
      * Display a listing of the resource.
@@ -19,10 +25,8 @@ class TagController extends Controller
      */
     public function index()
 	{
-	    $currentUser = JWTAuth::parseToken()->authenticate();
-	    $tag 		 = new Tag();
-	    return $tag
-	    	->orderBy('created_at', 'desc')
+        $this->currentUser();
+        return Tag::orderBy('created_at', 'desc')
 	    	->get()
 	    	->toArray();
 	}
