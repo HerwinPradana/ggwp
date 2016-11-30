@@ -118,6 +118,12 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $post = $this->currentUser()->posts()->find($id);
+        if(!$post)
+            throw new NotFoundHttpException;
+        if($post->delete())
+            return $this->response->noContent();
+        else
+            return $this->response->error('could_not_delete_book', 500);
     }
 }
