@@ -4,9 +4,11 @@ namespace App\Api\V1\Controllers;
 
 use JWTAuth;
 use App\Post;
+use App\Http\Requests;
+use Illuminate\Http\Request;
 use Dingo\Api\Routing\Helpers;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class PostController extends Controller
 {
@@ -51,7 +53,6 @@ class PostController extends Controller
         
         $post = new Post;
         $post->content = $request->get('content');
-        $post->user_id = $this->currentUser()->id;
         $post->is_tutorial = $request->get('is_tutorial');
         $post->created_by = $this->currentUser()->id;
         $post->updated_by = $this->currentUser()->id;
@@ -70,7 +71,10 @@ class PostController extends Controller
      */
     public function show($id)
     {
-        //
+        $post = $this->currentUser()->posts()->find($id);
+        if(!$post)
+            throw new NotFoundHttpException; 
+        return $post;
     }
 
     /**
@@ -93,7 +97,17 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $post = $this->currentUser()->posts()->find($id);
+        if(!$post)
+            throw new NotFoundHttpException;
+
+        $post->update($request->all());
+        $post->updated_by = $this->currentUser()->id;
+        
+        if($post->save())
+            return $this->response->noContent();
+        else
+            return $this->response->error('could_not_update_post', 500);    
     }
 
     /**
