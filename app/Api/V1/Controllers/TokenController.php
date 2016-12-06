@@ -18,7 +18,7 @@ class TokenController extends Controller
         return JWTAuth::parseToken()->authenticate();
     }
 
-    public function showToken()
+    public function checkToken()
     {
         return $token = JWTAuth::getToken();
     }
