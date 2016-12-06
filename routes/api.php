@@ -31,7 +31,7 @@ $api->version('v1', function (Router $api) {
         ]);
 
         //
-        $api->get('checktoken', 'App\Api\V1\Controllers\TokenController@checkToken');
+        $api->get('checkToken', 'App\Api\V1\Controllers\TokenController@checkToken');
         $api->resource('tags', 'App\Api\V1\Controllers\TagController');
         $api->resource('post', 'App\Api\V1\Controllers\PostController');
     });
