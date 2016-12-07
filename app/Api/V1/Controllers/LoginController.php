@@ -29,7 +29,8 @@ class LoginController extends Controller
         return response()
             ->json([
                 'status' => 'ok',
-                'token' => $token
+                'token' => $token,
+                'user'	=> App\User::where('email', $request->input('email'))->first();
             ]);
     }
 }

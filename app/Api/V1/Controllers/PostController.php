@@ -14,7 +14,7 @@ class PostController extends Controller
 {
     use Helpers;
 
-    private function currentUser() {
+    private function currentUser(){
         return JWTAuth::parseToken()->authenticate();
     }
 
@@ -23,12 +23,18 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index(){
         $this->currentUser();
-        return Post::orderBy('created_at', 'desc')
-            ->get()
-            ->toArray();
+        
+        $posts = Post::orderBy('created_at', 'desc')->get();
+        foreach($posts as &$post){
+        	$post->user_name	= $post->user->name;
+        	$post->user_image	= $post->user->image;
+        }
+        
+        $response = new \stdClass();
+        $response->result = $posts;
+        return response()->json($response);
     }
 
     /**

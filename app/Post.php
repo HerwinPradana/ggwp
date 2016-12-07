@@ -4,12 +4,15 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Post extends Model
-{
+class Post extends Model{
+
     protected $fillable = ['content', 'is_tutorial'];
 
-    public function tags()
-    {
+	public function user(){
+        return $this->belongsTo('App\User', 'created_by');
+	}
+	
+    public function tags(){
         return $this->belongsToMany('App\Tag', 'post_tags');
     }
 
