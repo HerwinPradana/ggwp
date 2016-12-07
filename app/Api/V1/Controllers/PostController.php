@@ -26,14 +26,8 @@ class PostController extends Controller
     public function index(){
         $this->currentUser();
         
-        $posts = Post::orderBy('created_at', 'desc')->get();
-        foreach($posts as &$post){
-        	$post->user_name	= $post->user->name;
-        	$post->user_image	= $post->user->image;
-        }
-        
         $response = new \stdClass();
-        $response->result = $posts;
+        $response->result = Post::with('user', 'tags')->orderBy('created_at', 'desc')->get();
         return response()->json($response);
     }
 
