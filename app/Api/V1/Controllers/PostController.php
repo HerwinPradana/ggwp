@@ -33,8 +33,9 @@ class PostController extends Controller{
 		    }
 
 		    $response->result = Post::with('user', 'tags')
-									->join('post_tags AS b', 'posts.id', '=', 'b.post_id')
-									->whereNotIn('b.tag_id', $tags)
+		    						->whereDoesntHave('tags', function($query) use ($tags){
+		    							$query->whereIn('tag_id', $tags);
+		    						})
 									->orderBy('created_at', 'desc')
 									->get();
 	    }
@@ -58,8 +59,9 @@ class PostController extends Controller{
 		    }
 		    
 		    $response->result = Post::with('user', 'tags')
-		    						->join('post_tags AS b', 'posts.id', '=', 'b.post_id')
-		    						->whereIn('b.tag_id', $tags)
+		    						->whereHas('tags', function($query) use ($tags){
+		    							$query->whereIn('tag_id', $tags);
+		    						})
 		    						->orderBy('created_at', 'desc')
 		    						->get();
 	    }
