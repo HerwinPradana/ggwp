@@ -3,39 +3,73 @@
 namespace App\Api\V1\Controllers;
 
 use JWTAuth;
+use App\User;
 use App\Post;
 use App\Http\Requests;
+use App\Http\Controllers\Controller;
+
 use Illuminate\Http\Request;
 use Dingo\Api\Routing\Helpers;
-use App\Http\Controllers\Controller;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class PostController extends Controller
-{
+class PostController extends Controller{
+
     use Helpers;
 
     private function currentUser(){
         return JWTAuth::parseToken()->authenticate();
     }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(){
+    
+    public function discovery(Request $request){
         $this->currentUser();
         
-        $response = new \stdClass();
-        $response->result = Post::with('user', 'tags')->orderBy('created_at', 'desc')->get();
-        return response()->json($response);
+        $interests = User::find($request->get('id'))->tags;
+	    $response  = new \stdClass();
+
+		if($interests->count() > 0){
+		    $tags = array();
+		    foreach($interests as $tag){
+		    	$tags[] = $tag->id;
+		    }
+
+		    $response->result = Post::with('user', 'tags')
+									->join('post_tags AS b', 'posts.id', '=', 'b.post_id')
+									->whereNotIn('b.tag_id', $tags)
+									->orderBy('created_at', 'desc')
+									->get();
+	    }
+	    else{
+		    $response->result = Post::with('user', 'tags')->orderBy('created_at', 'desc')->get();
+	    }
+	    
+	    return response()->json($response);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function interests(Request $request){
+        $this->currentUser();
+        
+        $interests = User::find($request->get('id'))->tags;
+	    $response  = new \stdClass();
+		
+		if($interests->count() > 0){
+		    $tags = array();
+		    foreach($interests as $tag){
+		    	$tags[] = $tag->id;
+		    }
+		    
+		    $response->result = Post::with('user', 'tags')
+		    						->join('post_tags AS b', 'posts.id', '=', 'b.post_id')
+		    						->whereIn('b.tag_id', $tags)
+		    						->orderBy('created_at', 'desc')
+		    						->get();
+	    }
+	    else{
+		    $response->result = Post::with('user', 'tags')->orderBy('created_at', 'desc')->get();
+		}
+
+	    return response()->json($response);
+    }
+
     public function create()
     {
         //

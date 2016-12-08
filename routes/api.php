@@ -33,7 +33,11 @@ $api->version('v1', function (Router $api) {
         //
         $api->get('checkToken', 'App\Api\V1\Controllers\TokenController@checkToken');
         $api->resource('tags', 'App\Api\V1\Controllers\TagController');
-        $api->resource('post', 'App\Api\V1\Controllers\PostController');
+        
+        $api->group(['prefix' => 'post'], function(Router $api) {
+        	$api->post('discovery', 'App\Api\V1\Controllers\PostController@discovery');
+        	$api->post('interests', 'App\Api\V1\Controllers\PostController@interests');
+        });
     });
 
     $api->get('hello', function() {
