@@ -12,8 +12,41 @@ class TagsTableSeeder extends Seeder
      */
     public function run()
     {
-		$tag1 = Tag::create(['name'=>'Robot', 'color'=>'#ee72ff', 'created_by'=>1, 'updated_by'=>1]);
-		$tag2 = Tag::create(['name'=>'Masakan', 'color'=>'#25ede9', 'created_by'=>1, 'updated_by'=>1]);
-		$tag3 = Tag::create(['name'=>'Catur', 'color'=>'#ff4747', 'created_by'=>1, 'updated_by'=>1]);
+    	DB::table('tags')->truncate();
+		$tag1 = Tag::create([
+			'name' 				=> 'Programming',
+			'description' 		=> 'Making software by coding.',
+			'background_color' 	=> '#3c3b37',
+			'text_color'		=> null,
+			'created_by' 		=> 1,
+			'updated_by' 		=> 1
+		]);
+		
+		$tag2 = Tag::create([
+			'name' 				=> 'Mobile Dev',
+			'description' 		=> 'Everything related to mobile apps development.',
+			'background_color' 	=> '#7fb348',
+			'text_color'		=> null,
+			'created_by' 		=> 1,
+			'updated_by' 		=> 1
+		]);
+		
+		$tag3 = Tag::create([
+			'name' 				=> 'HEMA',
+			'description' 		=> 'Historical European Martial Art.',
+			'background_color' 	=> null,
+			'text_color'		=> null,
+			'created_by' 		=> 5,
+			'updated_by' 		=> 5
+		]);
+		
+		$tag4 = Tag::create([
+			'name' 				=> 'Dragonball Training',
+			'description' 		=> 'Training programme for non-Saiyans.',
+			'background_color' 	=> '#f8a333',
+			'text_color'		=> null,
+			'created_by' 		=> 4,
+			'updated_by' 		=> 4
+		]);
     }
 }
