@@ -32,7 +32,7 @@ class PostController extends Controller{
 		    	$tags[] = $tag->id;
 		    }
 
-		    $response->result = Post::with('user', 'tags')
+		    $response->result = Post::with('user', 'images', 'tags')
 		    						->whereDoesntHave('tags', function($query) use ($tags){
 		    							$query->whereIn('tag_id', $tags);
 		    						})
@@ -58,7 +58,7 @@ class PostController extends Controller{
 		    	$tags[] = $tag->id;
 		    }
 		    
-		    $response->result = Post::with('user', 'tags')
+		    $response->result = Post::with('user', 'images', 'tags')
 		    						->whereHas('tags', function($query) use ($tags){
 		    							$query->whereIn('tag_id', $tags);
 		    						})

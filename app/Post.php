@@ -15,6 +15,10 @@ class Post extends Model{
     public function tags(){
         return $this->belongsToMany('App\Tag', 'post_tags');
     }
+	
+    public function images(){
+        return $this->hasMany('App\Image', 'post_id');
+    }
 
     // public function communities()
     // {
