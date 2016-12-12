@@ -40,7 +40,7 @@ class PostController extends Controller{
 									->get();
 	    }
 	    else{
-		    $response->result = Post::with('user', 'tags')->orderBy('created_at', 'desc')->get();
+		    $response->result = Post::with('user', 'images', 'tags')->orderBy('created_at', 'desc')->get();
 	    }
 	    
 	    return response()->json($response);
@@ -66,7 +66,7 @@ class PostController extends Controller{
 		    						->get();
 	    }
 	    else{
-		    $response->result = Post::with('user', 'tags')->orderBy('created_at', 'desc')->get();
+		    $response->result = Post::with('user', 'images', 'tags')->orderBy('created_at', 'desc')->get();
 		}
 
 	    return response()->json($response);
