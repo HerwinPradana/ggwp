@@ -4,7 +4,7 @@ namespace App\Api\V1\Controllers;
 
 use JWTAuth;
 use App\User;
-use App\Post;
+use App\Community;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
@@ -12,71 +12,19 @@ use Illuminate\Http\Request;
 use Dingo\Api\Routing\Helpers;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class PostController extends Controller{
+class CommunityController extends Controller{
 
     use Helpers;
 
     private function currentUser(){
         return JWTAuth::parseToken()->authenticate();
     }
-    
-    public function discovery(Request $request){
+
+    public function index(Request $request){
         $this->currentUser();
         
-        $interests = User::find($request->get('id'))->tags;
 	    $response  = new \stdClass();
-
-		if($interests->count() > 0){
-		    $tags = array();
-		    foreach($interests as $tag){
-		    	$tags[] = $tag->id;
-		    }
-
-		    $response->result = Post::with('user', 'images', 'tags')
-		    						->whereDoesntHave('tags', function($query) use ($tags){
-		    							$query->whereIn('tag_id', $tags);
-		    						})
-									->orderBy('created_at', 'desc')
-									->get();
-	    }
-	    else{
-		    $response->result = Post::with('user', 'images', 'tags')->orderBy('created_at', 'desc')->get();
-	    }
-	    
-	    return response()->json($response);
-    }
-
-    public function interests(Request $request){
-        $this->currentUser();
-        
-        $interests = User::find($request->get('id'))->tags;
-	    $response  = new \stdClass();
-		
-		if($interests->count() > 0){
-		    $tags = array();
-		    foreach($interests as $tag){
-		    	$tags[] = $tag->id;
-		    }
-		    
-		    $response->result = Post::with('user', 'images', 'tags')
-		    						->whereHas('tags', function($query) use ($tags){
-		    							$query->whereIn('tag_id', $tags);
-		    						})
-		    						->orderBy('created_at', 'desc')
-		    						->get();
-	    }
-	    else{
-		    $response->result = Post::with('user', 'images', 'tags')->orderBy('created_at', 'desc')->get();
-		}
-
-	    return response()->json($response);
-    }
-
-    public function users(Request $request){
-        $this->currentUser();
-        
-        $id = $request->get('id');
-	    $response->result = Post::with('user', 'images', 'tags')->where('created_by', $id)->orderBy('created_at', 'desc')->get();
+	    $response->result = Community::with('tags')->orderBy('created_at', 'desc')->get();
 
 	    return response()->json($response);
     }
