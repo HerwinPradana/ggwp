@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\Community;
 
 class CommunitiesTableSeeder extends Seeder
 {
@@ -13,6 +14,7 @@ class CommunitiesTableSeeder extends Seeder
     {
     	DB::table('communities')->truncate();
 		$community1 = Community::create([
+            'name'          => 'Get Good Dev Team',
 			'content'		=> 'Get Good Dev Team',
 			'description'	=> 'Dummy community.',
 			'image'			=> 'ic_launcher.png',
