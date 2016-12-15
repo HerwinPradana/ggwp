@@ -17,6 +17,7 @@ class CreatePostsTable extends Migration
             $table->increments('id');
             $table->longText('content');
             $table->boolean('is_tutorial')->default(0);
+            $table->integer('user_id');
             $table->integer('created_by');
             $table->integer('updated_by');
             $table->timestamps();
