@@ -5,6 +5,8 @@ namespace App\Api\V1\Controllers;
 use JWTAuth;
 use App\User;
 use App\Post;
+use App\Tag;
+use App\Community;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
@@ -23,7 +25,7 @@ class PostController extends Controller{
     public function discovery(Request $request){
         $this->currentUser();
         
-        $interests = User::find($request->get('id'))->tags;
+        $interests = User::find($this->currentUser()->id)->tags;
 	    $response  = new \stdClass();
 
 		if($interests->count() > 0){
@@ -49,7 +51,7 @@ class PostController extends Controller{
     public function interests(Request $request){
         $this->currentUser();
         
-        $interests = User::find($request->get('id'))->tags;
+        $interests = User::find($this->currentUser()->id)->tags;
 	    $response  = new \stdClass();
 		
 		if($interests->count() > 0){
@@ -76,36 +78,37 @@ class PostController extends Controller{
         $this->currentUser();
         
         $id = $request->get('id');
+	    $response  = new \stdClass();
 	    $response->result = Post::with('user', 'images', 'tags')->where('created_by', $id)->orderBy('created_at', 'desc')->get();
 
 	    return response()->json($response);
     }
 
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {   
+    public function store(Request $request){
         $this->currentUser();
+        
+        $tags		 = $request->get('tags');
+        $communities = $request->get('communities');
         
         $post = new Post;
         $post->content = $request->get('content');
-        $post->is_tutorial = $request->get('is_tutorial');
         $post->created_by = $this->currentUser()->id;
         $post->updated_by = $this->currentUser()->id;
+        
+        $status = $this->currentUser()->posts()->save($post);
 
-        if($this->currentUser()->posts()->save($post))
-            return $this->response->created();
-        else
-            return $this->response->error('could_not_create_book', 500);
+        if($status){
+			$tags 	  	 = ($tags)? json_decode($tags) : null;
+			$communities = ($communities)? json_decode($communities) : null;
+						
+			$post->tags()->attach($tags);
+			$post->communities()->attach($communities);
+        }
+			
+		$response  = new \stdClass();
+		$response->status = ($status != null);
+		
+        return response()->json($response);
     }
 
     /**

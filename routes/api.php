@@ -38,6 +38,7 @@ $api->version('v1', function (Router $api) {
         	$api->post('discovery', 'App\Api\V1\Controllers\PostController@discovery');
         	$api->post('interests', 'App\Api\V1\Controllers\PostController@interests');
         	$api->post('users', 'App\Api\V1\Controllers\PostController@users');
+        	$api->post('store', 'App\Api\V1\Controllers\PostController@store');
         });
         
         $api->group(['prefix' => 'community'], function(Router $api) {

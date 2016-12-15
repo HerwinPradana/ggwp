@@ -26,9 +26,11 @@ class TagController extends Controller
     public function index()
 	{
         $this->currentUser();
-        return Tag::orderBy('created_at', 'desc')
-	    	->get()
-	    	->toArray();
+        
+	    $response  = new \stdClass();
+	    $response->result = Tag::orderBy('created_at', 'desc')->get();
+
+	    return response()->json($response);
 	}
 
     /**

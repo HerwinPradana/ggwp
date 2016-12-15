@@ -13,8 +13,8 @@ class CommunityTagsTableSeeder extends Seeder
     {
     	DB::table('community_tags')->truncate();
 		DB::table('community_tags')->insert([
-            ['community_id'	=> 1, 'tag_id'	=> 1],
             ['community_id'	=> 1, 'tag_id'	=> 2],
+            ['community_id'	=> 1, 'tag_id'	=> 3],
         ]);
     }
 }

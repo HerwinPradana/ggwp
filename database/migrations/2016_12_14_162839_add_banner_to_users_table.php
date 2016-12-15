@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class DropUserIdInPostTable extends Migration
+class AddBannerToUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class DropUserIdInPostTable extends Migration
      */
     public function up()
     {
-        Schema::table('posts', function (Blueprint $table) {
-            $table->dropColumn('user_id');
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('banner', 50)->nullable()->after('image');
         });
     }
 
@@ -25,7 +25,8 @@ class DropUserIdInPostTable extends Migration
      */
     public function down()
     {
-        Schema::table('posts', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
+            //
         });
     }
 }

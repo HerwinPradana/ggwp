@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class DropUserIdInPostTable extends Migration
+class RemoveTutorialFromPostsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class DropUserIdInPostTable extends Migration
     public function up()
     {
         Schema::table('posts', function (Blueprint $table) {
-            $table->dropColumn('user_id');
+            $table->dropColumn('is_tutorial');
         });
     }
 
@@ -26,6 +26,7 @@ class DropUserIdInPostTable extends Migration
     public function down()
     {
         Schema::table('posts', function (Blueprint $table) {
+            $table->boolean('is_tutorial')->default(0)->after('content');
         });
     }
 }
