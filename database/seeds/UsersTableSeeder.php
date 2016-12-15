@@ -49,7 +49,8 @@ class UsersTableSeeder extends Seeder
 			'name'		=> 'Oberyn Martell',
 			'email'		=>'redviper@dorne.com',
 			'password'	=> 'testing',
-			'image' 	=> 'oberyn-martell.jpg'
+			'image' 	=> 'oberyn-martell.jpg',
+			'banner'	=> '400px-Zippo514_RV_vs_Mountain.jpg'
 		]);
 		$user5->save();
     }
