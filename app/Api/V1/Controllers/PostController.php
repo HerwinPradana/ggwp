@@ -34,7 +34,7 @@ class PostController extends Controller{
 		    	$tags[] = $tag->id;
 		    }
 
-		    $response->result = Post::with('user', 'images', 'tags')
+		    $response->result = Post::with('user', 'images', 'communities', 'tags')
 		    						->whereDoesntHave('tags', function($query) use ($tags){
 		    							$query->whereIn('tag_id', $tags);
 		    						})
@@ -42,7 +42,7 @@ class PostController extends Controller{
 									->get();
 	    }
 	    else{
-		    $response->result = Post::with('user', 'images', 'tags')->orderBy('created_at', 'desc')->get();
+		    $response->result = Post::with('user', 'images', 'communities', 'tags')->orderBy('created_at', 'desc')->get();
 	    }
 	    
 	    return response()->json($response);
@@ -60,7 +60,7 @@ class PostController extends Controller{
 		    	$tags[] = $tag->id;
 		    }
 		    
-		    $response->result = Post::with('user', 'images', 'tags')
+		    $response->result = Post::with('user', 'images', 'communities', 'tags')
 		    						->whereHas('tags', function($query) use ($tags){
 		    							$query->whereIn('tag_id', $tags);
 		    						})
@@ -68,7 +68,7 @@ class PostController extends Controller{
 		    						->get();
 	    }
 	    else{
-		    $response->result = Post::with('user', 'images', 'tags')->orderBy('created_at', 'desc')->get();
+		    $response->result = Post::with('user', 'images', 'communities', 'tags')->orderBy('created_at', 'desc')->get();
 		}
 
 	    return response()->json($response);
@@ -79,7 +79,7 @@ class PostController extends Controller{
         
         $id = $request->get('id');
 	    $response  = new \stdClass();
-	    $response->result = Post::with('user', 'images', 'tags')->where('created_by', $id)->orderBy('created_at', 'desc')->get();
+	    $response->result = Post::with('user', 'images', 'communities', 'tags')->where('created_by', $id)->orderBy('created_at', 'desc')->get();
 
 	    return response()->json($response);
     }
