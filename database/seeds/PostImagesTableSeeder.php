@@ -20,7 +20,6 @@ class PostImagesTableSeeder extends Seeder
             ['post_id' => 4, 'file' => 'bws_unity_3d_2.png'],
             ['post_id' => 5, 'file' => 'random.png'],
             ['post_id' => 6, 'file' => 'fencing_tutorial.jpg'],
-            ['post_id' => 6, 'file' => 'fencing2.jpg']
         ]);
     }
 }

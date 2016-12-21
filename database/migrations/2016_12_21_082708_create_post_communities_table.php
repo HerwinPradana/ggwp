@@ -27,7 +27,7 @@ class CreatePostCommunitiesTable extends Migration
      */
     public function down()
     {
-        Schema::table('post_communities', function (Blueprint $table) {
+        Schema::drop('post_communities', function (Blueprint $table) {
             //
         });
     }
