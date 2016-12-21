@@ -14,7 +14,7 @@ class AddCreatedAtToCommunityTagsTable extends Migration
     public function up()
     {
         Schema::table('community_tags', function (Blueprint $table) {
-            $table->dateTime('created_at');
+            $table->dateTime('created_at')->nullable();
         });
     }
 

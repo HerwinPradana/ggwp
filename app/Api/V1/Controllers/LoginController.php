@@ -31,6 +31,6 @@ class LoginController extends Controller
                 'status' => 'ok',
                 'token' => $token,
                 'user'	=> \App\User::where('email', $request->input('email'))->first()
-            ]);
+        ]);
     }
 }
