@@ -29,6 +29,18 @@ class CommunityController extends Controller{
 	    return response()->json($response);
     }
 
+    public function users(Request $request){
+        $this->currentUser();
+        
+        $id = $request->get('id');
+	    $response  = new \stdClass();
+	    $response->result = Community::with('tags')->whereHas('members', function($query) use ($id){
+	    	$query->where('users.id', $id);
+	    })->orderBy('created_at', 'desc')->get();
+
+	    return response()->json($response);
+    }
+
     public function create()
     {
         //

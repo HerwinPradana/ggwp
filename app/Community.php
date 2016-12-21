@@ -13,4 +13,8 @@ class Community extends Model{
     public function posts(){
     	return $this->belongsToMany('App\Post', 'community_posts');
     }
+
+    public function members(){
+    	return $this->belongsToMany('App\User', 'user_communities');
+    }
 }
