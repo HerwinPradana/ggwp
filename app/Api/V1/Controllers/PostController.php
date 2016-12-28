@@ -21,65 +21,51 @@ class PostController extends Controller{
     private function currentUser(){
         return JWTAuth::parseToken()->authenticate();
     }
-    
-    public function discovery(Request $request){
+
+    public function get(Request $request){
         $this->currentUser();
         
-        $interests = User::find($this->currentUser()->id)->tags;
-	    $response  = new \stdClass();
+        $user_id	  = $request->get('user_id');
+        $community_id = $request->get('community_id');
+        $type		  = $request->get('type');
 
-		if($interests->count() > 0){
-		    $tags = array();
-		    foreach($interests as $tag){
-		    	$tags[] = $tag->id;
-		    }
-
-		    $response->result = Post::with('user', 'images', 'communities', 'tags')
-		    						->whereDoesntHave('tags', function($query) use ($tags){
-		    							$query->whereIn('tag_id', $tags);
-		    						})
-									->orderBy('created_at', 'desc')
-									->get();
-	    }
-	    else{
-		    $response->result = Post::with('user', 'images', 'communities', 'tags')->orderBy('created_at', 'desc')->get();
-	    }
-	    
-	    return response()->json($response);
-    }
-
-    public function interests(Request $request){
-        $this->currentUser();
+    	$query = Post::with('user', 'images', 'communities', 'tags');
         
-        $interests = User::find($this->currentUser()->id)->tags;
-	    $response  = new \stdClass();
-		
-		if($interests->count() > 0){
-		    $tags = array();
-		    foreach($interests as $tag){
-		    	$tags[] = $tag->id;
-		    }
-		    
-		    $response->result = Post::with('user', 'images', 'communities', 'tags')
-		    						->whereHas('tags', function($query) use ($tags){
-		    							$query->whereIn('tag_id', $tags);
-		    						})
-		    						->orderBy('created_at', 'desc')
-		    						->get();
-	    }
-	    else{
-		    $response->result = Post::with('user', 'images', 'communities', 'tags')->orderBy('created_at', 'desc')->get();
-		}
+        if($type){
+	        $interests = User::find($this->currentUser()->id)->tags;
+	        
+			if($interests->count() > 0){
+				$tags = array();
+				foreach($interests as $tag){
+					$tags[] = $tag->id;
+				}
+				
+				if($type == 'interest'){
+					$query->whereHas('tags', function($query) use ($tags){
+						$query->whereIn('tag_id', $tags);
+					});
+				}
+				else{
+					$query->whereDoesntHave('tags', function($query) use ($tags){
+						$query->whereIn('tag_id', $tags);
+					});
+				}
+			}
+        }
+        else{
+        	if($user_id)
+        		$query->where('created_by', $user_id);
+        	
+        	if($community_id){
+				$query->whereHas('communities', function($query) use ($community_id){
+					$query->where('community_id', $community_id);
+				});
+    		}
+    		
+        }
 
-	    return response()->json($response);
-    }
-
-    public function users(Request $request){
-        $this->currentUser();
-        
-        $id = $request->get('id');
-	    $response  = new \stdClass();
-	    $response->result = Post::with('user', 'images', 'communities', 'tags')->where('created_by', $id)->orderBy('created_at', 'desc')->get();
+		$response = new \stdClass();
+		$response->result = $query->orderBy('created_at', 'desc')->get();
 
 	    return response()->json($response);
     }
@@ -105,7 +91,7 @@ class PostController extends Controller{
 			$post->communities()->attach($communities);
         }
 			
-		$response  = new \stdClass();
+		$response = new \stdClass();
 		$response->status = ($status != null);
 		
         return response()->json($response);

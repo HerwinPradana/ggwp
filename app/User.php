@@ -48,4 +48,8 @@ class User extends Authenticatable
     public function tags(){
         return $this->belongsToMany('App\Tag', 'user_tags');
     }
+	
+    public function communities(){
+        return $this->belongsToMany('App\Community', 'user_communities');
+    }
 }

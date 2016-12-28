@@ -39,15 +39,14 @@ $api->version('v1', function (Router $api) {
         });
         
         $api->group(['prefix' => 'post'], function(Router $api) {
-        	$api->post('discovery', 'App\Api\V1\Controllers\PostController@discovery');
-        	$api->post('interests', 'App\Api\V1\Controllers\PostController@interests');
-        	$api->post('users', 'App\Api\V1\Controllers\PostController@users');
+        	$api->post('get', 'App\Api\V1\Controllers\PostController@get');
         	$api->post('store', 'App\Api\V1\Controllers\PostController@store');
         });
         
         $api->group(['prefix' => 'community'], function(Router $api) {
-        	$api->post('/get', 'App\Api\V1\Controllers\CommunityController@index');
-        	$api->post('/users', 'App\Api\V1\Controllers\CommunityController@users');
+        	$api->post('get', 'App\Api\V1\Controllers\CommunityController@get');
+        	$api->post('detail', 'App\Api\V1\Controllers\CommunityController@detail');
+        	$api->post('members', 'App\Api\V1\Controllers\CommunityController@members');
         });
     });
 

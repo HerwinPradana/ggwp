@@ -20,38 +20,48 @@ class CommunityController extends Controller{
         return JWTAuth::parseToken()->authenticate();
     }
 
-    public function index(Request $request){
+    public function get(Request $request){
         $this->currentUser();
         
-	    $response  = new \stdClass();
-	    $response->result = Community::with('tags')->orderBy('created_at', 'desc')->get();
+        $query = Community::with('tags');
+        
+        $user_id = $request->get('user_id');
+        if($user_id){
+        	$query->whereHas('members', function($query) use ($user_id){
+				$query->where('users.id', $user_id);
+			});
+		}
+        
+	    $response = new \stdClass();
+	    $response->result = $query->orderBy('created_at', 'desc')->get();
 
 	    return response()->json($response);
     }
 
-    public function users(Request $request){
+    public function detail(Request $request){
         $this->currentUser();
         
         $id = $request->get('id');
-	    $response  = new \stdClass();
-	    $response->result = Community::with('tags')->whereHas('members', function($query) use ($id){
-	    	$query->where('users.id', $id);
-	    })->orderBy('created_at', 'desc')->get();
+        
+	    $response = new \stdClass();
+	    $response->result = Community::find($id);
 
 	    return response()->json($response);
     }
 
-    public function create()
-    {
-        //
+    public function members(Request $request){
+        $this->currentUser();
+        
+        $community_id = $request->get('community_id');
+        
+	    $response = new \stdClass();
+	    $response->result = User::whereHas('communities', function($query) use ($community_id){
+			$query->where('community_id', $community_id);
+		})->orderBy('created_at', 'desc')->get();
+
+	    return response()->json($response);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {   
         $this->currentUser();
